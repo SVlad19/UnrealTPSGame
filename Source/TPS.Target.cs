@@ -6,12 +6,12 @@ using System;
 
 public class TPSTarget : TargetRules
 {
-	public TPSTarget(TargetInfo Target) : base(Target)
-	{
+    public TPSTarget(TargetInfo Target) : base(Target)
+    {
         Console.WriteLine("TPS target ------------------------------>");
         Type = TargetType.Game;
-		DefaultBuildSettings = BuildSettingsVersion.V5;
-		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_4;
-		ExtraModuleNames.Add("TPS");
-	}
+        DefaultBuildSettings = BuildSettingsVersion.V5;
+        IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_4;
+        ExtraModuleNames.Add("TPS");
+    }
 }
