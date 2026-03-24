@@ -7,10 +7,9 @@ public class TPSEditorTarget : TargetRules
 {
     public TPSEditorTarget(TargetInfo Target) : base(Target)
     {
-        Console.WriteLine("TPS editor target ------------------------------>");
         Type = TargetType.Editor;
-        DefaultBuildSettings = BuildSettingsVersion.V5;
-        IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_4;
+        DefaultBuildSettings = BuildSettingsVersion.V6;
+        IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_7;
         ExtraModuleNames.Add("TPS");
     }
 }
