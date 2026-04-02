@@ -12,6 +12,7 @@ class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
+class UTPSInventoryComponent;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
@@ -60,6 +61,10 @@ protected:
 
     // To add mapping context
     virtual void BeginPlay();
+
+protected:
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+    UTPSInventoryComponent* InventoryComponent;
 
 public:
     /** Returns CameraBoom subobject **/

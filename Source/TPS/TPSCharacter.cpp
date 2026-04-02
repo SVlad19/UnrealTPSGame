@@ -11,6 +11,7 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "InputActionValue.h"
+#include "Components/TPSInventoryComponent.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -83,6 +84,8 @@ ATPSCharacter::ATPSCharacter()
     // blueprint asset named
     // ThirdPersonCharacter (to avoid
     // direct content references in C++)
+
+    InventoryComponent = CreateDefaultSubobject<UTPSInventoryComponent>("InventoryComponent");
 }
 
 void ATPSCharacter::BeginPlay()
