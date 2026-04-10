@@ -2,7 +2,7 @@
 
 rem Engine params
 set EnginePath_5.4=E:\EpicGames\UE_5.4
-set EnginePath_5.7_InstalledBuild=E:\JenkinsJobs\UE Source\UE_5.7_InstalledBuild\Windows
+set EnginePath_5.7_InstalledBuild=E:\JenkinsJobs\UE_5.7_InstalledBuild\Windows
 
 set UBTRelativePath5=Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.exe
 set VersionSelector=C:\Program Files (x86)\Epic Games\Launcher\Engine\Binaries\Win64\UnrealVersionSelector.exe

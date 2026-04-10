@@ -1,7 +1,6 @@
 // My game copyright
 
 #include "Science/ScienceFuncLib.h"
-#include "ScienceFuncLib.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogScience, All, All);
 
