@@ -5,17 +5,17 @@ call "%~dp0..\config.bat"
 :begin
 set /p TestClassName= "Enter test class name :"
 if [%TestClassName%]==[] goto:begin
-set /p TestRelativePath= "Enter relative to [Source\%ProjectPureName%] directory (use \ symbol for subdirs):"
+set /p TestRelativePath= "Enter relative to [Source\%ProjectPureName%\Private|Public] directory (use \ symbol for subdirs):"
 
 rem .h / .cpp file names
 set TestCppFileName=%TestClassName%.cpp
 set TestHFileName=%TestClassName%.h
 
 rem full paths to .h / .cpp files to create
-set TestAbsoluteDir=%SourceCodePath%\%ProjectPureName%\%TestRelativePath%
+set TestAbsoluteDir=%SourceCodePath%\%ProjectPureName%
 if [%TestRelativePath%]==[] set TestAbsoluteDir=%SourceCodePath%\%ProjectPureName%
-set TestCppFilePath=%TestAbsoluteDir%\%TestCppFileName%
-set TestHFilePath=%TestAbsoluteDir%\%TestHFileName%
+set TestCppFilePath=%TestAbsoluteDir%\Private\%TestRelativePath%\%TestCppFileName%
+set TestHFilePath=%TestAbsoluteDir%\Public\%TestRelativePath%\%TestHFileName%
 
 rem Confirmation
 echo.

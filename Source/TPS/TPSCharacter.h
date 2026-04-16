@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
+#include "TPSTypes.h"
 #include "TPSCharacter.generated.h"
 
 class USpringArmComponent;
@@ -13,6 +14,11 @@ class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
 class UTPSInventoryComponent;
+class UDamageType;
+class AController;
+class USpringArmComponent;
+class UCameraComponent;
+class UInputComponent;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
@@ -20,6 +26,13 @@ UCLASS(config = Game)
 class ATPSCharacter : public ACharacter
 {
     GENERATED_BODY()
+
+    UFUNCTION()
+    void OnAnyDamageReceived(
+        AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser);
+
+    void OnHealing();
+    void OnDeath();
 
     /** Camera boom positioning the camera behind the character */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -45,6 +58,10 @@ class ATPSCharacter : public ACharacter
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
     UInputAction* LookAction;
 
+    float Health{0.f};
+
+    FTimerHandle HealTimerHandle;
+
 public:
     ATPSCharacter();
 
@@ -57,18 +74,24 @@ protected:
 
 protected:
     // APawn interface
-    virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+    virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
     // To add mapping context
-    virtual void BeginPlay();
+    virtual void BeginPlay() override;
 
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
     UTPSInventoryComponent* InventoryComponent;
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Health")
+    FHealthData HealthData;
+
+    UFUNCTION(BlueprintCallable, Category = "Health")
+    float GetHealthPercent() const;
+
 public:
     /** Returns CameraBoom subobject **/
-    FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+    FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
     /** Returns FollowCamera subobject **/
-    FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+    FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 };

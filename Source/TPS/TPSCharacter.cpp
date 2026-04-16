@@ -12,6 +12,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "InputActionValue.h"
 #include "Components/TPSInventoryComponent.h"
+#include "TimerManager.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -90,8 +91,69 @@ ATPSCharacter::ATPSCharacter()
 
 void ATPSCharacter::BeginPlay()
 {
-    // Call the base class
     Super::BeginPlay();
+
+    check(HealthData.MaxHealth > 0.f);
+    Health = HealthData.MaxHealth;
+
+    OnTakeAnyDamage.AddDynamic(this, &ATPSCharacter::OnAnyDamageReceived);
+}
+
+void ATPSCharacter::OnAnyDamageReceived(
+    AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
+{
+    const auto IsAlive = [&]() { return Health > 0.f; };
+
+    if (Damage <= 0.f || !IsAlive())
+    {
+        return;
+    }
+
+    Health = FMath::Clamp(Health - Damage, 0.f, HealthData.MaxHealth);
+
+    if (IsAlive())
+    {
+        GetWorldTimerManager().SetTimer(HealTimerHandle, this, &ATPSCharacter::OnHealing, HealthData.HealRate, true, -1.0);
+    }
+    else
+    {
+        OnDeath();
+    }
+}
+
+void ATPSCharacter::OnHealing()
+{
+    Health = FMath::Clamp(Health + HealthData.HealModifier, 0.f, HealthData.MaxHealth);
+    if (FMath::IsNearlyEqual(Health, HealthData.MaxHealth))
+    {
+        Health = HealthData.MaxHealth;
+        GetWorldTimerManager().ClearTimer(HealTimerHandle);
+    }
+}
+
+void ATPSCharacter::OnDeath()
+{
+    GetWorldTimerManager().ClearTimer(HealTimerHandle);
+
+    check(GetCharacterMovement());
+    check(GetCapsuleComponent());
+    check(GetMesh());
+
+    GetCharacterMovement()->DisableMovement();
+    GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+    GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    GetMesh()->SetSimulatePhysics(true);
+    if (Controller)
+    {
+        Controller->ChangeState(NAME_Spectating);
+    }
+
+    SetLifeSpan(HealthData.LifeSpan);
+}
+
+float ATPSCharacter::GetHealthPercent() const
+{
+    return Health / HealthData.MaxHealth;
 }
 
 //////////////////////////////////////////////////////////////////////////
