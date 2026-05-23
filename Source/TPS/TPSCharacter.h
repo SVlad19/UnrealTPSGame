@@ -65,6 +65,9 @@ class ATPSCharacter : public ACharacter
 public:
     ATPSCharacter();
 
+    UFUNCTION(BlueprintCallable, Category = "Health" /*, meta = (BlueprintProtected = "true")*/)
+    float GetHealthPercent() const;
+
 protected:
     /** Called for movement input */
     void Move(const FInputActionValue& Value);
@@ -85,9 +88,6 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Health")
     FHealthData HealthData;
-
-    UFUNCTION(BlueprintCallable, Category = "Health")
-    float GetHealthPercent() const;
 
 public:
     /** Returns CameraBoom subobject **/
