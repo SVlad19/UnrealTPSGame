@@ -5,10 +5,15 @@
 #include "Engine/Blueprint.h"
 #include "Tests/AutomationCommon.h"
 
+class UInputAction;
+struct FInputActionValue;
+
 namespace TPS
 {
 namespace Test
 {
+
+bool SimulateInput(APlayerController* PC, UInputAction* InputAction, const FInputActionValue& ActionValue);
 
 template <typename Type1, typename Type2>
 struct TestPayload
@@ -42,13 +47,26 @@ T* CreateBlueprintDeferred(UWorld* World, const FString& Name, const FTransform&
 class LevelScope
 {
 public:
-    LevelScope(const FString& MapName) { AutomationOpenMap("MapName"); }
+    LevelScope(const FString& MapName) { AutomationOpenMap(MapName); }
     ~LevelScope() { ADD_LATENT_AUTOMATION_COMMAND(FExitGameCommand); }
 };
 
 UWorld* GetTestGameWorld();
 
 void CallFuncByNameWithParams(UObject* Object, const FString& FuncName, const TArray<FString>& Params);
+
+class FTPSUntilLatentCommand : public IAutomationLatentCommand
+{
+public:
+    FTPSUntilLatentCommand(TFunction<void()> InCallback, TFunction<void()> InTimeoutCallback, float InTimeout = 5.0f);
+
+    virtual bool Update() override;
+
+private:
+    TFunction<void()> Callback;
+    TFunction<void()> TimeoutCallback;
+    float Timeout;
+};
 
 }  // namespace Test
 }  // namespace TPS

@@ -46,6 +46,16 @@ class ATPSCharacter : public ACharacter
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
     UInputMappingContext* DefaultMappingContext;
 
+    float Health{0.f};
+
+    FTimerHandle HealTimerHandle;
+
+public:
+    ATPSCharacter();
+
+    UFUNCTION(BlueprintCallable, Category = "Health" /*, meta = (BlueprintProtected = "true")*/)
+    float GetHealthPercent() const;
+
     /** Jump Input Action */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
     UInputAction* JumpAction;
@@ -57,16 +67,6 @@ class ATPSCharacter : public ACharacter
     /** Look Input Action */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
     UInputAction* LookAction;
-
-    float Health{0.f};
-
-    FTimerHandle HealTimerHandle;
-
-public:
-    ATPSCharacter();
-
-    UFUNCTION(BlueprintCallable, Category = "Health" /*, meta = (BlueprintProtected = "true")*/)
-    float GetHealthPercent() const;
 
 protected:
     /** Called for movement input */
