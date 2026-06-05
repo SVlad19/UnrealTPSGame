@@ -40,27 +40,28 @@ void CallFuncByNameWithParams(UObject* Object, const FString& FuncName, const TA
     Object->CallFunctionByNameWithArguments(*Command, OutputDeviceNull, nullptr, true);
 }
 
-bool SimulateInput(APlayerController* PC, UInputAction* InputAction, const FInputActionValue& ActionValue)
+UEnhancedPlayerInput* GetEnhancedPlayerInput(const APlayerController* PC)
 {
-    if (!PC || !InputAction)
+    if (!PC)
     {
-        return false;
+        return nullptr;
     }
 
     ULocalPlayer* LocalPlayer = PC->GetLocalPlayer();
     if (!LocalPlayer)
     {
-        return false;
+        return nullptr;
     }
 
     UEnhancedInputLocalPlayerSubsystem* Subsystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
-    if (!Subsystem)
-    {
-        return false;
-    }
 
-    UEnhancedPlayerInput* PlayerInput = Subsystem->GetPlayerInput();
-    if (!PlayerInput)
+    return Subsystem ? Subsystem->GetPlayerInput() : nullptr;
+}
+
+bool SimulateInput(APlayerController* PC, UInputAction* InputAction, const FInputActionValue& ActionValue)
+{
+    UEnhancedPlayerInput* PlayerInput = GetEnhancedPlayerInput(PC);
+    if (!PlayerInput || !InputAction)
     {
         return false;
     }
@@ -85,6 +86,11 @@ bool FTPSUntilLatentCommand::Update()
 
     Callback();
     return false;
+}
+
+FString GetTestDataDir()
+{
+    return FPaths::GameSourceDir().Append("TPS/Data/");
 }
 
 }  // namespace Test

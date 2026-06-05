@@ -7,11 +7,13 @@
 
 class UInputAction;
 struct FInputActionValue;
+class UEnhancedPlayerInput;
 
 namespace TPS
 {
 namespace Test
 {
+UEnhancedPlayerInput* GetEnhancedPlayerInput(const APlayerController* PC);
 
 bool SimulateInput(APlayerController* PC, UInputAction* InputAction, const FInputActionValue& ActionValue);
 
@@ -67,6 +69,8 @@ private:
     TFunction<void()> TimeoutCallback;
     float Timeout;
 };
+
+FString GetTestDataDir();
 
 }  // namespace Test
 }  // namespace TPS
