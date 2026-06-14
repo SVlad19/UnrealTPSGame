@@ -19,6 +19,9 @@ class TPS_API ATPSPlayerController : public APlayerController
 public:
     void ToggleGamePause();
 
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+    TObjectPtr<UInputAction> PauseAction;
+
 protected:
     virtual void SetupInputComponent() override;
 
@@ -28,9 +31,6 @@ protected:
 private:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
     TObjectPtr<UInputMappingContext> UIMappingContext;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-    TObjectPtr<UInputAction> PauseAction;
 
     bool bInPause{false};
 };

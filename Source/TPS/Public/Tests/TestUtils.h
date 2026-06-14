@@ -4,6 +4,9 @@
 #include "CoreMinimal.h"
 #include "Engine/Blueprint.h"
 #include "Tests/AutomationCommon.h"
+#include "Blueprint/WidgetTree.h"
+#include "Blueprint/UserWidget.h"
+#include "Blueprint/WidgetBlueprintLibrary.h"
 
 class UInputAction;
 struct FInputActionValue;
@@ -81,6 +84,16 @@ private:
 };
 
 FString GetTestDataDir();
+
+template <class T>
+T* FindWidgetByClass()
+{
+    TArray<UUserWidget*> Widgets;
+    UWidgetBlueprintLibrary::GetAllWidgetsOfClass(GetTestGameWorld(), Widgets, T::StaticClass(), false);
+    return Widgets.Num() != 0 ? Cast<T>(Widgets[0]) : nullptr;
+}
+
+UWidget* FindWidgetByName(const UUserWidget* Widget, const FName& WidgetName);
 
 }  // namespace Test
 }  // namespace TPS

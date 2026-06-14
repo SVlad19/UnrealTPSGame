@@ -5,11 +5,8 @@
 #include "CoreMinimal.h"
 #include "TPSGameSetting.generated.h"
 
-USTRUCT()
 struct FSettingOption
 {
-    GENERATED_BODY()
-
     FText Name;
     int32 Value;
 };
@@ -23,8 +20,9 @@ public:
     FORCEINLINE void SetName(const FText& InName) { Name = InName; }
     FORCEINLINE void SetOptions(const TArray<FSettingOption>& InOptions) { Options = InOptions; }
 
-    FSettingOption GetCurrentOption() const;
     FORCEINLINE FText GetName() const { return Name; }
+    FSettingOption GetCurrentOption() const;
+
     void AddGetter(TFunction<int32()> Func);
     void AddSetter(TFunction<void(int32)> Func);
 
