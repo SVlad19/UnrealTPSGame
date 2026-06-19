@@ -95,6 +95,44 @@ T* FindWidgetByClass()
 
 UWidget* FindWidgetByName(const UUserWidget* Widget, const FName& WidgetName);
 
+class FTakeScreenshotLatentCommand : public IAutomationLatentCommand
+{
+public:
+    FTakeScreenshotLatentCommand(const FString& InScreenshotName);
+
+    virtual ~FTakeScreenshotLatentCommand();
+
+protected:
+    virtual void OnScreenshotTakenAndCompared();
+
+    const FString ScreenshotName;
+    bool ScreenshotRequested{false};
+    bool CommandCompleted{false};
+};
+
+class FTakeGameScreenshotLatentCommand : public FTakeScreenshotLatentCommand
+{
+public:
+    FTakeGameScreenshotLatentCommand(const FString& InScreenshotName);
+
+    virtual bool Update() override;
+};
+
+class FTakeUIScreenshotLatentCommand : public FTakeScreenshotLatentCommand
+{
+public:
+    FTakeUIScreenshotLatentCommand(const FString& InScreenshotName);
+
+    virtual bool Update() override;
+
+private:
+    virtual void OnScreenshotTakenAndCompared() override;
+
+    void SetBufferVisualization(const FName& VisualizeBuffer);
+
+    bool SceenshotSetupDone{false};
+};
+
 }  // namespace Test
 }  // namespace TPS
 
