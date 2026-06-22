@@ -54,7 +54,7 @@ bool FCppActorCantBeCreated::RunTest(const FString& Parameters)
 
     const FTransform InitialTransform{FVector{1000.f}};
     const ATPSInventoryItem* InvItem = World->SpawnActor<ATPSInventoryItem>(ATPSInventoryItem::StaticClass(), InitialTransform);
-    if (!TestNull("Inventory item exists", InvItem))
+    if (!TestNull("Inventory doesn`t exists", InvItem))
     {
         return false;
     }

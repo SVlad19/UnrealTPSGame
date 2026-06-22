@@ -114,6 +114,15 @@ UWidget* FindWidgetByName(const UUserWidget* Widget, const FName& WidgetName)
     return FoundWidget;
 }
 
+void SpecCloseLevel(UWorld* World)
+{
+
+    if (APlayerController* PC = World->GetFirstPlayerController())
+    {
+        PC->ConsoleCommand(TEXT("Exit"), true);
+    }
+}
+
 FTakeScreenshotLatentCommand::FTakeScreenshotLatentCommand(const FString& InScreenshotName) : ScreenshotName(InScreenshotName)
 {
     FAutomationTestFramework::Get().OnScreenshotTakenAndCompared.AddRaw(this, &FTakeScreenshotLatentCommand::OnScreenshotTakenAndCompared);

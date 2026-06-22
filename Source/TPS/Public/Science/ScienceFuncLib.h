@@ -14,4 +14,7 @@ class TPS_API UScienceFuncLib : public UBlueprintFunctionLibrary
 public:
     UFUNCTION(BlueprintPure, Category = Science)
     static int32 Fibonacci(int32 Value);
+
+    UFUNCTION(BlueprintPure, Category = Science)
+    static int32 Factorial(int32 Value);
 };
