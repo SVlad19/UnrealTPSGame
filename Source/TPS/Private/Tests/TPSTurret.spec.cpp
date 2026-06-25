@@ -10,7 +10,7 @@
 using namespace TPS::Test;
 
 BEGIN_DEFINE_SPEC(FTurret, "TPSGame.Turret",
-    EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter | EAutomationTestFlags::HighPriority)
+    EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter | EAutomationTestFlags::CriticalPriority)
 
 UWorld* World;
 const FTransform InitialTransform{FVector{0.f, 286.f, 110.f}};

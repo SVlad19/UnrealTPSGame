@@ -9,7 +9,7 @@
 #include "Settings/TPSGameUserSettings.h"
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FSettingsShouldExist, "TPSGame.GameUserSettings.SettingsShouldExist",
-    EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter | EAutomationTestFlags::HighPriority);
+    EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter | EAutomationTestFlags::CriticalPriority);
 
 using namespace TPS::Test;
 
