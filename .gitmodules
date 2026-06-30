@@ -1,0 +1,6 @@
+[submodule "devops/docs/Doxygen_Flat_Theme"]
+	path = devops/docs/Doxygen_Flat_Theme
+	url = https://github.com/SVlad19/Doxygen_Flat_Theme.git
+[submodule "devops/docs/UE_Doxygen_Filter"]
+	path = devops/docs/UE_Doxygen_Filter
+	url = https://github.com/SVlad19/UE_Doxygen_Filter.git
