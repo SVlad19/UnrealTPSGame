@@ -7,9 +7,18 @@ on:
     branches:
       - main
 
+permissions: 
+  contents: read
+  pages: write
+  deployments: write
+  id-token: write
+
 jobs:
   docs:
     runs-on: windows-latest
+    environment:
+      name: github-pages
+      url: ${{steps.deployment.outputs.page_url}}
     steps:
       - name: Check Installed Software
         run: where git & where python & where pip
@@ -30,12 +39,13 @@ jobs:
         run: doxygen devops\docs\Doxyfile
         
       - name: Upload Docs
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: Documentation\html
           
       - name: Setup Pages
-        run: echo "Setup Pages"
+        uses: actions/configure-pages@v6
         
       - name: Deploy To GitHub Pages
-        run: echo "Deploy To GitHub Pages"
+        id: deployment
+        uses: actions/deploy-pages@v5
