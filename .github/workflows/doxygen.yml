@@ -1,0 +1,41 @@
+name: Game Documentation
+on: 
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  docs:
+    runs-on: windows-latest
+    steps:
+      - name: Check Installed Software
+        run: where git & where python & where pip
+        shell: cmd
+        
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          submodules: 'recursive'
+
+      - name: Install Conan
+        run: pip install conan
+
+      - name: Install Doxygen
+        run: conan download doxygen/1.17.0@#7bbd9853ee4859042bea8683d68e418e:9f839a3d76e1fd667acf68381254d811321c9026 --remote conancenter
+        
+      - name: Run Doxygen
+        run: doxygen devops\docs\Doxyfile
+        
+      - name: Upload Docs
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: Documentation\html
+          
+      - name: Setup Pages
+        run: echo "Setup Pages"
+        
+      - name: Deploy To GitHub Pages
+        run: echo "Deploy To GitHub Pages"
