@@ -1,0 +1,22 @@
+name: Clang format verification
+on: 
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  format-checking:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Run clang-format
+        uses: jidicula/clang-format-action@v4.18.0
+        with:
+          clang-format-version: '13'
+          check-path: 'Source'
