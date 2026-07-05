@@ -13,7 +13,7 @@ pipeline {
         }
     }
 
-    /*environment{
+    environment{ /*
         GIT_URL_GAME = 'https://github.com/SVlad19/UnrealTPSGame.git'
         GIT_CREDENTIALS_GAME = '32f553ec-c28e-437d-8427-72869c4a8c55'
         UAT_PATH = 'E:\\JenkinsJobs\\UE_5.7_InstalledBuild\\Windows\\Engine\\Build\\BatchFiles\\RunUAT.bat'
@@ -28,7 +28,13 @@ pipeline {
         OPEN_CPP_COVERAGE_PATH = 'E:\\OpenCppCoverage\\OpenCppCoverage.exe'
         SOURCE_CODE_PATH = "$BUILD_DIR\\Source"
         EXCLUDED_SOURCES = "$BUILD_DIR\\Source\\TPS\\Private\\Tests"
-    }*/
+        TEST_EXTRA_CMD = 'SetPriority Critical'
+        */
+
+        UNOPTIMIZE_FALSE_LINE = 'public bool UnoptimizedCode = false;'
+        UNOPTIMIZE_TRUE_LINE = 'public bool UnoptimizedCode = true;'
+        EDITOR_TARGET_PATH = "$SOURCE_CODE_PATH\\${PROJECT_PURE_NAME}Editor.Target.cs"
+    }
 
     stages {
         stage('Git clone') {
@@ -42,6 +48,16 @@ pipeline {
                     //extensions: [cleanBeforeCheckout()],
                     userRemoteConfigs: [[credentialsId: "$GIT_CREDENTIALS_GAME",
                     url: "$GIT_URL_GAME"]])
+            }
+        }
+        stage('Set unoptimized build'){
+            when {
+                environment name: 'UNOPTIMIZED_BUILD', value: 'true'
+            }
+            steps{
+                bat '''
+                    powershell -Command "(gc %EDITOR_TARGET_PATH%) -replace '%UNOPTIMIZE_FALSE_LINE%', '%UNOPTIMIZE_TRUE_LINE%' | Out-File %EDITOR_TARGET_PATH%"
+                '''
             }
         }
         stage('Build') {
@@ -59,11 +75,24 @@ pipeline {
         stage('Test') {
             steps {
                  bat '''
-                    set TEST_RUNNER="%EDITOR_PATH%" "%PROJECT_PATH%" -ExecCmds="Automation; RunTests %TEST_NAMES%;Quit" ^
+                    set TEST_RUNNER="%EDITOR_PATH%" "%PROJECT_PATH%" -ExecCmds="Automation %TEST_EXTRA_CMD%; RunTests %TEST_NAMES%;Quit" ^
                     -ReportOutputPath="%TEST_OUTPUT_PATH%" %EDITOR_FLAGS%                   
 
                     "%OPEN_CPP_COVERAGE_PATH%" --modules="%BUILD_DIR%" --sources="%SOURCE_CODE_PATH%" ^
                     --excluded_sources="%EXCLUDED_SOURCES%" --export_type="%CODE_COVERAGE_EXPORT_TYPE%" -- %TEST_RUNNER% 
+              
+                    if errorlevel 255 echo WARNING: Some tests failed, error code: %errorLevel% & exit /b 0
+                '''
+            
+            }
+        }
+        stage('Unset unoptimized build'){
+            when {
+                environment name: 'UNOPTIMIZED_BUILD', value: 'true'
+            }
+            steps{
+                bat '''
+                    powershell -Command "(gc %EDITOR_TARGET_PATH%) -replace '%UNOPTIMIZE_FALSE_LINE%', '%UNOPTIMIZE_TRUE_LINE%' | Out-File %EDITOR_TARGET_PATH%"
                 '''
             }
         }
@@ -81,7 +110,7 @@ pipeline {
                     "%COBERTURA_PATCHER_PATH%" -cobertura_report_path="%CODE_COVERAGE_PATH%"
                 '''
                 junit 'Build\\Tests\\index.xml'
-                cobertura coberturaReportFile: 'Build\\Tests\\Coverage.xml', onlyStable: false
+                recordCoverage(tools: [[parser: 'COBERTURA', pattern: 'Build\\Tests\\Coverage.xml']])
             }
         }
     }
