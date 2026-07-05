@@ -20,12 +20,12 @@ rem Run tests
 set TestRunner="%EditorPath%" "%ProjectPath%" -ExecCmds="Automation; RunTests %TestNames%;Quit" ^
 -log -abslog="%TestOutputLogPath%" -nosplash -ReportOutputPath="%ReportOutputPath%"
 
-rem Run code corerage
+rem Run code coverage
 set ExportType=html:%ReportOutputPath%\Coverage\CodeCoverageReport
 ::set ExportType=cobertura:%ReportOutputPath%\Coverage\CodeCoverageReport.xml
 
 "%OpenCPPCoveragePath%" --modules="%ProjectRoot%" --sources="%SourceCodePath%" ^
---excluded_sources="%SourceCodePath%\TPS\Tests" --export_type="%ExportType%" -v -- %TestRunner% 
+--excluded_sources="%SourceCodePath%\TPS\Private\Tests" --export_type="%ExportType%" -v -- %TestRunner% 
 
 rem Clean obsolete artifacts
 del /q LastCoverageResults.log
